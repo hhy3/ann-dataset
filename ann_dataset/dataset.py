@@ -127,6 +127,18 @@ class DatasetGlove25(Dataset):
         self.file = h5py.File(self.path)
 
 
+class DatasetGlove200(Dataset):
+    name = "glove-200-angular"
+    metric = "IP"
+
+    def __init__(self, dir=None):
+        self.path = self.get_fname(dir)
+        if not os.path.exists(self.path):
+            os.system(
+                f'wget --output-document {self.path} {download(self.name)}')
+        self.file = h5py.File(self.path)
+
+
 class DatasetLastFM64(Dataset):
     name = "lastfm-64-dot"
     metric = "IP"
@@ -151,8 +163,23 @@ class DatasetGIST960(Dataset):
         self.file = h5py.File(self.path)
 
 
+class DatasetCohere(Dataset):
+    name = "cohere-768-angular"
+    metric = "IP"
+
+    def __init__(self, dir=None):
+        self.path = self.get_fname(dir)
+        if not os.path.exists(self.path):
+            os.system(
+                f'wget --output-document {self.path} {download(self.name)}')
+        self.file = h5py.File(self.path)
+
+
 dataset_dict = {'sift-128-euclidean': DatasetSIFT1M, 'fashion-mnist-784-euclidean': DatasetFashionMnist,
-                'nytimes-256-angular': DatasetNYTimes, 'glove-100-angular': DatasetGlove100, 'glove-25-angular': DatasetGlove25, 'lastfm-64-dot': DatasetLastFM64, 'gist-960-euclidean': DatasetGIST960}
+                'nytimes-256-angular': DatasetNYTimes, 'glove-100-angular': DatasetGlove100,
+                'glove-25-angular': DatasetGlove25, 'glove-200-angular': DatasetGlove200, 'lastfm-64-dot': DatasetLastFM64,
+                'gist-960-euclidean': DatasetGIST960, 'cohere-768-angular': DatasetCohere}
+
 
 def list_datasets():
     return list(dataset_dict.keys())
