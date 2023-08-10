@@ -27,6 +27,7 @@ class Dataset:
         self.gt = None
         self.file = None
         self.path = ""
+        self.normalize = True
 
     def evaluate(self, pred, k=None):
         nq, topk = pred.shape
@@ -40,13 +41,13 @@ class Dataset:
 
     def get_database(self):
         ret = mmap_read(self.file['train'], self.path)
-        if self.metric == "IP":
+        if self.metric == "IP" and self.normalize:
             ret = preprocessing.normalize(ret)
         return ret
 
     def get_queries(self):
         ret = np.array(self.file['test'])
-        if self.metric == "IP":
+        if self.metric == "IP" and self.normalize:
             ret = preprocessing.normalize(ret)
         return ret
 
@@ -118,6 +119,7 @@ class DatasetGlove100(Dataset):
 class DatasetGlove25(Dataset):
     name = "glove-25-angular"
     metric = "IP"
+    normalize = True
 
     def __init__(self, dir=None):
         self.path = self.get_fname(dir)
@@ -163,6 +165,19 @@ class DatasetGIST960(Dataset):
         self.file = h5py.File(self.path)
 
 
+class DatasetText2Image10M(Dataset):
+    name = "text2image-10M"
+    metric = "IP"
+    normalize = False
+
+    def __init__(self, dir=None):
+        self.path = self.get_fname(dir)
+        if not os.path.exists(self.path):
+            os.system(
+                f'wget --output-document {self.path} {download(self.name)}')
+        self.file = h5py.File(self.path)
+
+
 class DatasetCohere(Dataset):
     name = "cohere-768-angular"
     metric = "IP"
@@ -178,8 +193,15 @@ class DatasetCohere(Dataset):
 dataset_dict = {'sift-128-euclidean': DatasetSIFT1M, 'fashion-mnist-784-euclidean': DatasetFashionMnist,
                 'nytimes-256-angular': DatasetNYTimes, 'glove-100-angular': DatasetGlove100,
                 'glove-25-angular': DatasetGlove25, 'glove-200-angular': DatasetGlove200, 'lastfm-64-dot': DatasetLastFM64,
-                'gist-960-euclidean': DatasetGIST960, 'cohere-768-angular': DatasetCohere}
+                'gist-960-euclidean': DatasetGIST960, 'cohere-768-angular': DatasetCohere, 'text2image-10M': DatasetText2Image10M}
 
 
 def list_datasets():
     return list(dataset_dict.keys())
+
+
+def to_fbin(x, fname):
+    f = open(fname, "wb")
+    n, d = x.shape
+    np.array([n, d], dtype='uint32').tofile(f)
+    x.tofile(f)
