@@ -95,6 +95,7 @@ class DatasetFashionMnist(Dataset):
 class DatasetNYTimes(Dataset):
     name = "nytimes-256-angular"
     metric = "IP"
+    normalize = True
 
     def __init__(self, dir=None):
         self.path = self.get_fname(dir)
@@ -107,6 +108,7 @@ class DatasetNYTimes(Dataset):
 class DatasetGlove100(Dataset):
     name = "glove-100-angular"
     metric = "IP"
+    normalize = True
 
     def __init__(self, dir=None):
         self.path = self.get_fname(dir)
@@ -132,6 +134,7 @@ class DatasetGlove25(Dataset):
 class DatasetGlove200(Dataset):
     name = "glove-200-angular"
     metric = "IP"
+    normalize = True
 
     def __init__(self, dir=None):
         self.path = self.get_fname(dir)
@@ -144,6 +147,7 @@ class DatasetGlove200(Dataset):
 class DatasetLastFM64(Dataset):
     name = "lastfm-64-dot"
     metric = "IP"
+    normalize = True
 
     def __init__(self, dir=None):
         self.path = self.get_fname(dir)
@@ -181,6 +185,7 @@ class DatasetText2Image10M(Dataset):
 class DatasetCohere(Dataset):
     name = "cohere-768-angular"
     metric = "IP"
+    normalize = True
 
     def __init__(self, dir=None):
         self.path = self.get_fname(dir)
