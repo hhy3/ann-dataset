@@ -79,6 +79,17 @@ class DatasetSIFT1M(Dataset):
                 f'wget --output-document {self.path} {download(self.name)}')
         self.file = h5py.File(self.path)
 
+class DatasetSIFTSMALL1M(Dataset):
+    name = "siftsmall-128-euclidean"
+    metric = "L2"
+
+    def __init__(self, dir=None):
+        self.path = self.get_fname(dir)
+        if not os.path.exists(self.path):
+            os.system(
+                f'wget --output-document {self.path} {download(self.name)}')
+        self.file = h5py.File(self.path)
+
 
 class DatasetFashionMnist(Dataset):
     name = "fashion-mnist-784-euclidean"
@@ -207,7 +218,7 @@ class DatasetOpenai(Dataset):
         self.file = h5py.File(self.path)
 
 
-dataset_dict = {'sift-128-euclidean': DatasetSIFT1M, 'fashion-mnist-784-euclidean': DatasetFashionMnist,
+dataset_dict = {'sift-128-euclidean': DatasetSIFT1M, 'siftsmall-128-euclidean': DatasetSIFTSMALL1M, 'fashion-mnist-784-euclidean': DatasetFashionMnist,
                 'nytimes-256-angular': DatasetNYTimes, 'glove-100-angular': DatasetGlove100,
                 'glove-25-angular': DatasetGlove25, 'glove-200-angular': DatasetGlove200, 'lastfm-64-dot': DatasetLastFM64,
                 'gist-960-euclidean': DatasetGIST960, 'cohere-768-angular': DatasetCohere, 'text2image-10M': DatasetText2Image10M,                'openai-1536-angular' : DatasetOpenai}
